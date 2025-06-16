@@ -32,6 +32,6 @@ if st.button("Does the patient have  Breast Cancer?"):
        concave_points_mean, symmetry_mean, fractal_dimension_mean]])
     prediction = model.predict(features)
     if int(prediction[0]) == 1:
-        st.write(f"Breast Cancer Predicted: Yes ({int(prediction[0])})")
+        st.write(f"Breast Cancer Predicted: Malignant (Cancerous) ({int(prediction[0])})")
     else:
-        st.write(f"Breast Cancer Predicted: No ({int(prediction[0])})")
+        st.write(f"Breast Cancer Predicted: Benign (Non-cancerous) ({int(prediction[0])})")
