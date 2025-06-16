@@ -9,7 +9,15 @@ st.subheader("Select Model for Classification:")
 model_choice = st.selectbox("Select Model", ["Baseline Logistic Regression Model", "Fine-tuned Logistic Regression Model"])
 
 # Load selected model
-model_path = "base_model_breast_cancer.pkl" if model_choice == "Baseline Logistic Regression Model" else "final_tuned_model_breast_cancer.pkl"
+
+import os
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+model_filename = "base_model_breast_cancer.pkl" if model_choice == "Baseline Logistic Regression Model" else "final_tuned_model_breast_cancer.pkl"
+model_path = os.path.join(current_dir, model_filename)
+
+
+# model_path = "base_model_breast_cancer.pkl" if model_choice == "Baseline Logistic Regression Model" else "final_tuned_model_breast_cancer.pkl"
 with open(model_path, "rb") as f:
     model = pickle.load(f)
 
