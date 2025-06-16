@@ -19,6 +19,11 @@ model_path = os.path.join(current_dir, model_filename)
 with open(model_path, "rb") as f:
     model = pickle.load(f)
 
+scaler_path = os.path.join(current_dir, "base_scaler.pkl")
+
+with open(scaler_path, "rb") as f:
+    scaler = pickle.load(f)
+
 st.subheader("Input value for the given features:")
 
 pregnancies = st.number_input("Pregnancies", min_value=0, max_value=20, step=1)
@@ -34,7 +39,9 @@ age = st.number_input("Age", min_value=1, max_value=100, step=1)
 # Prediction
 if st.button("Predict Glucose Levels:"):
     features = np.array([[pregnancies, blood_pressure,  insulin, bmi, dpf, age]])
-    prediction = model.predict(features)
+    features_scaled = scaler.transform(features)
+
+    prediction = model.predict(features_scaled)
 
     st.write(f"Glucose level: {int(prediction[0])}")
 
