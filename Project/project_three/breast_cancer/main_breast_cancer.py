@@ -13,13 +13,27 @@ model_choice = st.selectbox("Select Model", ["Baseline Logistic Regression Model
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-model_filename = "base_model_breast_cancer.pkl" if model_choice == "Baseline Logistic Regression Model" else "final_tuned_model_breast_cancer.pkl"
-model_path = os.path.join(current_dir, model_filename)
 
 
-# model_path = "base_model_breast_cancer.pkl" if model_choice == "Baseline Logistic Regression Model" else "final_tuned_model_breast_cancer.pkl"
+# model_filename = "base_model_breast_cancer.pkl" if model_choice == "Baseline Logistic Regression Model" else "final_tuned_model_breast_cancer.pkl"
+
+if model_choice == "Baseline Logistic Regression Model":
+    model_path = os.path.join(current_dir, "base_model_breast_cancer.pkl")
+    scaler_path = os.path.join(current_dir, "base_scaler.pkl")
+else:
+    model_path = os.path.join(current_dir, "final_tuned_model_breast_cancer.pkl")
+    scaler_path = os.path.join(current_dir, "tuned_scaler.pkl")
+
+# model_path = os.path.join(current_dir, model_filename)
+
+
+# model_path = "base_model_breast_cancer.pkl" if model_choice == "Baseline Logistic Regression Model" else "final_tuned_model_breast_cancer.pkl")
+
 with open(model_path, "rb") as f:
     model = pickle.load(f)
+
+with open(scaler_path, "rb") as f:
+    scaler = pickle.load(f)
 
 # Inputs
 st.subheader("Input value for the given features:")
@@ -38,7 +52,11 @@ fractal_dimension_mean = st.slider("Mean Fractal Dimension", min_value=0.00,max_
 if st.button("Does the patient have  Breast Cancer?"):
     features = np.array([[radius_mean, texture_mean, smoothness_mean, compactness_mean, concavity_mean,
        concave_points_mean, symmetry_mean, fractal_dimension_mean]])
-    prediction = model.predict(features)
+    
+    # Scale features
+    features_scaled = scaler.transform(features)
+
+    prediction = model.predict(features_scaled)
     if int(prediction[0]) == 1:
         st.write(f"Breast Cancer Predicted: Malignant (Cancerous) ({int(prediction[0])})")
     else:
